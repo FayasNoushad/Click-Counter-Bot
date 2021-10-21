@@ -10,7 +10,7 @@ License -> https://github.com/FayasNoushad/Click-Counter-Bot/blob/main/LICENSE
 ## Deploy
 
 ```sh
-git clone https://github.com/FayasNoushad/Click-Counter-Bot/tree/main
+git clone https://github.com/FayasNoushad/Click-Counter-Bot.git
 cd Click-Counter-Bot
 pip3 install -r requirements.txt
 # <Create Variables appropriately>
