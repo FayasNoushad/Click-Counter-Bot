@@ -7,7 +7,9 @@ Bot = Client(
     "Click Counter Bot",
     bot_token=os.environ["BOT_TOKEN"],
     api_id=int(os.environ["API_ID"]),
-    api_hash=os.environ["API_HASH"]
+    api_hash=os.environ["API_HASH"],
+    parse_mode="html",
+    sleep_threshold=3600
 )
 
 
