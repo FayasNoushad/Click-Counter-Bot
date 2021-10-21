@@ -13,14 +13,14 @@ Bot = Client(
 )
 
 
-@Bot.on_message(filters.command(["start"])
+@Bot.on_message(filters.command(["start"]))
 async def start(bot, update):
     await update.reply_text(
         f"Hello {update.from_user.id}, I am a telegram bot module for how to count total clicks on button.\n\nMade By @FayasNoushad"
     )
 
 
-@Bot.on_message(filters.command(["count"])
+@Bot.on_message(filters.command(["count"]))
 async def count(bot, update, count=0, cb=False):
     text = f"Total {str(count)} clicks"
     reply_markup = InlineKeyboardMarkup(
