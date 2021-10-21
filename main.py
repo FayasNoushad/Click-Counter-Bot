@@ -27,6 +27,7 @@ async def count(bot, update, count=0, cb=False):
         [[InlineKeyboardButton(text="Click Here", callback_data="count="+str(count))]]
     )
     if cb:
+        await update.answer(text="Added your click.\n\n"+text, show_alert=True)
         await update.message.edit_text(text=text, reply_markup=reply_markup)
     else:
         await update.reply_text(text=text, reply_markup=reply_markup)
