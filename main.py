@@ -35,7 +35,7 @@ async def count(bot, update, count=0, cb=False):
 
 @Bot.on_callback_query()
 async def callback(bot, update):
-    await count(bot, update, count=update.data.split("=")[1]+1, cb=True)
+    await count(bot, update, count=str(int(update.data.split("=")[1])+1), cb=True)
 
 
 Bot.run()
