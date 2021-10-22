@@ -7,13 +7,15 @@ from pyrogram.types import (
     CallbackQuery,
 )
 from pyrogram import Client, filters
+from dotenv import load_dotenv
+load_dotenv()
 
 
 Bot = Client(
     "Click Counter Bot",
-    bot_token=os.environ["BOT_TOKEN"],
-    api_id=int(os.environ["API_ID"]),
-    api_hash=os.environ["API_HASH"],
+    bot_token=os.environ.get("BOT_TOKEN"),
+    api_id=int(os.environ.get("API_ID")),
+    api_hash=os.environ.get("API_HASH"),
     parse_mode="html",
     sleep_threshold=3600,
 )
@@ -30,7 +32,8 @@ async def start(_, update: Message):
 async def count(_, update: Union[Message, CallbackQuery], count=0):
     text = f"Total {str(count)} clicks"
     reply_markup = InlineKeyboardMarkup(
-        [[InlineKeyboardButton(text="Click Here", callback_data="count=" + str(count))]]
+        [[InlineKeyboardButton(
+            text="Click Here", callback_data="count=" + str(count))]]
     )
     if isinstance(update, CallbackQuery):
         await update.answer(text="Added your click.\n\n" + text, show_alert=True)
