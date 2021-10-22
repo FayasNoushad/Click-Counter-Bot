@@ -4,7 +4,7 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     InlineKeyboardButton,
     Message,
-    CallbackQuery,
+    CallbackQuery
 )
 from pyrogram import Client, filters
 from dotenv import load_dotenv
@@ -32,8 +32,12 @@ async def start(_, update: Message):
 async def count(_, update: Union[Message, CallbackQuery], count=0):
     text = f"Total {str(count)} clicks"
     reply_markup = InlineKeyboardMarkup(
-        [[InlineKeyboardButton(
-            text="Click Here", callback_data="count=" + str(count))]]
+        [[
+            InlineKeyboardButton(
+                text="Click Here",
+                callback_data="count="+str(count)
+            )
+        ]]
     )
     if isinstance(update, CallbackQuery):
         await update.answer(text="Added your click.\n\n" + text, show_alert=True)
