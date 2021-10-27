@@ -4,10 +4,12 @@ from pyrogram.types import (
     InlineKeyboardMarkup,
     InlineKeyboardButton,
     Message,
-    CallbackQuery
+    CallbackQuery,
 )
 from pyrogram import Client, filters
+from pyrogram.errors import MessageNotModified
 from dotenv import load_dotenv
+
 load_dotenv()
 
 
@@ -32,18 +34,26 @@ async def start(_, update: Message):
 async def count(_, update: Union[Message, CallbackQuery], count=0):
     text = f"Total {str(count)} clicks"
     reply_markup = InlineKeyboardMarkup(
-        [[
-            InlineKeyboardButton(
-                text="Click Here",
-                callback_data="count="+str(count)
-            )
-        ]]
+        [[InlineKeyboardButton(text="Click Here", callback_data="count=" + str(count))]]
     )
     if isinstance(update, CallbackQuery):
         await update.answer(text="Added your click.\n\n" + text, show_alert=True)
         await update.message.edit_text(text=text, reply_markup=reply_markup)
     else:
         await update.reply_text(text=text, reply_markup=reply_markup)
+
+
+@Bot.on_message(filters.command("reset"))
+async def reset_count(_, update: Message):
+    if (reply := update.reply_to_message) and (mkp := reply.reply_markup):
+        mkp.inline_keyboard[0][0].callback_data = "count=0"  # modifying the callback data
+        try:
+            await reply.edit(text="Total 0 clicks", reply_markup=reply.reply_markup)
+            await reply.reply_text("Counter has been reset successfully", True)
+        except MessageNotModified:
+            await reply.reply_text("Counter is already at 0", True)
+    else:
+        await update.reply_text("Please reply to an active counter message")
 
 
 @Bot.on_callback_query()
