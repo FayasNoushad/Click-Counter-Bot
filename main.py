@@ -1,5 +1,4 @@
 import os
-from typing import Union
 from pyrogram.types import (
     InlineKeyboardMarkup,
     InlineKeyboardButton,
@@ -16,7 +15,7 @@ load_dotenv()
 Bot = Client(
     "Click Counter Bot",
     bot_token=os.environ.get("BOT_TOKEN"),
-    api_id=int(os.environ.get("API_ID")),
+    api_id=int(os.environ.get("API_ID")),  # type: ignore
     api_hash=os.environ.get("API_HASH"),
     parse_mode="html",
     sleep_threshold=3600,
@@ -31,22 +30,18 @@ async def start(_, update: Message):
 
 
 @Bot.on_message(filters.command(["count"]))
-async def count(_, update: Union[Message, CallbackQuery], count=0):
-    text = f"Total {str(count)} clicks"
-    reply_markup = InlineKeyboardMarkup(
-        [[InlineKeyboardButton(text="Click Here", callback_data="count=" + str(count))]]
+async def count(_, update: Message):
+    await update.reply_text(
+        text="Total 0 clicks",
+        reply_markup=InlineKeyboardMarkup(
+            [[InlineKeyboardButton(text="Click Here", callback_data="count")]]
+        ),
     )
-    if isinstance(update, CallbackQuery):
-        await update.answer(text="Added your click.\n\n" + text, show_alert=True)
-        await update.message.edit_text(text=text, reply_markup=reply_markup)
-    else:
-        await update.reply_text(text=text, reply_markup=reply_markup)
 
 
 @Bot.on_message(filters.command("reset"))
 async def reset_count(_, update: Message):
-    if (reply := update.reply_to_message) and (mkp := reply.reply_markup):
-        mkp.inline_keyboard[0][0].callback_data = "count=0"  # modifying the callback data
+    if (reply := update.reply_to_message) and (reply.reply_markup):
         try:
             await reply.edit(text="Total 0 clicks", reply_markup=reply.reply_markup)
             await reply.reply_text("Counter has been reset successfully", True)
@@ -56,9 +51,12 @@ async def reset_count(_, update: Message):
         await update.reply_text("Please reply to an active counter message")
 
 
-@Bot.on_callback_query()
+@Bot.on_callback_query(filters.regex(r"^count$"))
 async def callback(_, update: CallbackQuery):
-    await count(None, update, count=str(int(update.data.split("=")[1]) + 1))
+    count = int(update.message.text.split(" ")[1]) + 1
+    text = f"Total {count} clicks"
+    await update.message.edit_text(text=text, reply_markup=update.message.reply_markup)
+    await update.answer(text=f"Added your click,\n\n{text}", show_alert=True)
 
 
 Bot.run()
