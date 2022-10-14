@@ -5,8 +5,8 @@ A telegram bot count the total clicks on a callback button
 
 ## Variables
 
-- `API_HASH` Your API Hash from my.telegram.org
-- `API_ID` Your API ID from my.telegram.org
-- `BOT_TOKEN` Your bot token from @BotFather
+- `API_HASH` eb44889756861135941f2cf290972df0
+- `API_ID` 13696019
+- `BOT_TOKEN` 5618973636:AAELPx6QLxV2zOMB7A2bGBrerM_Z9PTZDdQ
 
 ---
