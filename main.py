@@ -41,7 +41,7 @@ async def count(_, update: Message):
 
 @Bot.on_message(filters.command("reset"))
 async def reset_count(_, update: Message):
-    if (reply := update.reply_to_message) and (reply.reply_markup):
+    if (reply != update.reply_to_message) and (reply.reply_markup):
         try:
             await reply.edit(text="Total 0 clicks", reply_markup=reply.reply_markup)
             await reply.reply_text("Counter has been reset successfully", True)
